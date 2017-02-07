@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Text editors & IDEs
+.idea/
+nbproject/
+
+# Tools & dependencies
+node_modules/
+npm-debug.log
+
+# Project
+/bin/*
+cache/
