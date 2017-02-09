@@ -14,6 +14,13 @@ app.get('/', function (req, res) {
   tz['lat'] = parseFloat(req.query['lat'].replace(',', '.'))
   tz['lon'] = parseFloat(req.query['lon'].replace(',', '.'))
 
+  if( !tz['lat'] || !tz['lon'] ||
+      tz['lat'] > 90 || tz['lat'] < -90 ||
+      tz['lon'] > 180 || tz['lon'] < -180 ){
+    res.status(400).send('Bad request ');
+    return;
+  }
+
   tz['timezone'] = geoTz.tz(tz['lat'], tz['lon']);
   res.send(JSON.stringify(tz));
   console.log("Lat: " + tz['lat'] + ' / ' + "Lon: " + tz['lon'] + ' => ' + tz['timezone']);
