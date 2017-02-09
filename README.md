@@ -1,12 +1,24 @@
 # timezoneFinder
 
-## Request
+## How to run it
 
-`http://(host):8080/?lat=3,2343&lon=22,22`
+```bash
+git clone https://github.com/shippeo/timezoneFinder.git && cd timezoneFinder
+npm i
+npm start
+```
 
-`http://(host):8080/?lat=3.2343&lon=22.22`
+## Request format
 
-## Response
+* Only two mandatory parameters : `lat` and `lon`
+* Decimal separator : comma or dot
+
+examples :
+
+* `http://(host):8080/?lat=3,2343&lon=22,22`
+* `http://(host):8080/?lat=3.2343&lon=22.22`
+
+## Response format
 
 ```javascript
 {
@@ -16,15 +28,21 @@
 }
 ```
 
-Return `null`if no timezone can be determine at coordinates
-
-Return HTTP error 400 for invalid input
+* Return `"timezone": "null"` if no timezone can be determine at coordinates
+* Return HTTP error 400 for invalid input
 
 ## coordinates examples
 
 ### France
-[France](https://goo.gl/maps/PLFRdwktTSz)  => http://tz.shippeo.com/?lat=50.286&lon=4.165
+[Europe/Paris](https://goo.gl/maps/PLFRdwktTSz)  => http://(host):8080/?lat=50.286&lon=4.165
 
 ### Belgium
-[Belgium](https://goo.gl/maps/HtnkDeehogD2) => http://tz.shippeo.com/?lat=50.286&lon=4.171
+[Europe/Brussels](https://goo.gl/maps/HtnkDeehogD2) => http://(host):8080/?lat=50.286&lon=4.171
+
+## Dependencies
+
+timezoneFinder is based on :
+* [geo-tz node module](https://github.com/evansiroky/node-geo-tz)
+* [expressjs](http://expressjs.com/)
+
 
