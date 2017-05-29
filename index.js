@@ -1,4 +1,10 @@
+console.time('load timezone');
 var geoTz = require('geo-tz')
+console.timeEnd('load timezone');
+
+var countryCodes = require('./countryCodes.js');
+countryCodes = countryCodes.countryCodes;
+console.log('Country Codes quantity : ' + Object.keys(countryCodes).length);
 
 var express = require('express');
 var app = express();
@@ -22,6 +28,8 @@ app.get('/', function (req, res) {
   }
 
   tz['timezone'] = geoTz.tz(tz['lat'], tz['lon']);
+  tz['countryCodeIsoA2'] = countryCodes[tz['timezone'].toLowerCase()];
+
   res.send(JSON.stringify(tz));
   console.log("Lat: " + tz['lat'] + ' / ' + "Lon: " + tz['lon'] + ' => ' + tz['timezone']);
 });
