@@ -17,21 +17,29 @@ app.use(function (req, res, next) {
 
 app.get('/', function (req, res) {
   var tz = {};
-  tz['lat'] = parseFloat(req.query['lat'].replace(',', '.'))
-  tz['lon'] = parseFloat(req.query['lon'].replace(',', '.'))
+  if(req.query['lat']){
+    tz['lat'] = parseFloat(req.query['lat'].replace(',', '.'))
+  }
+  if(req.query['lng']){
+    tz['lng'] = parseFloat(req.query['lng'].replace(',', '.'))
+  }
+  //TEMP FIX to remove
+  if(req.query['lon']){
+    tz['lng'] = parseFloat(req.query['lon'].replace(',', '.'))
+  }
 
-  if( !tz['lat'] || !tz['lon'] ||
+  if( !tz['lat'] || !tz['lng'] ||
       tz['lat'] > 90 || tz['lat'] < -90 ||
-      tz['lon'] > 180 || tz['lon'] < -180 ){
+      tz['lng'] > 180 || tz['lng'] < -180 ){
     res.status(400).send('Bad request ');
     return;
   }
 
-  tz['timezone'] = geoTz.tz(tz['lat'], tz['lon']);
+  tz['timezone'] = geoTz.tz(tz['lat'], tz['lng']);
   tz['countryCodeIsoA2'] = countryCodes[tz['timezone'].toLowerCase()];
 
   res.send(JSON.stringify(tz));
-  console.log("Lat: " + tz['lat'] + ' / ' + "Lon: " + tz['lon'] + ' => ' + tz['timezone']);
+  console.log("Lat: " + tz['lat'] + ' / ' + "Lng: " + tz['lng'] + ' => ' + tz['timezone']);
 });
 
 app.listen(8080, function () {
