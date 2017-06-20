@@ -36,7 +36,11 @@ app.get('/', function (req, res) {
   }
 
   tz['timezone'] = geoTz.tz(tz['lat'], tz['lng']);
-  tz['countryCodeIsoA2'] = countryCodes[tz['timezone'].toLowerCase()];
+  if(tz['timezone']){
+    tz['countryCodeIsoA2'] = countryCodes[tz['timezone'].toLowerCase()];
+  }else{
+    console.log("Lat: " + tz['lat'] + ' / ' + "Lng: " + tz['lng'] + ' => ' + 'No Timezone');
+  }
 
   res.send(JSON.stringify(tz));
   console.log("Lat: " + tz['lat'] + ' / ' + "Lng: " + tz['lng'] + ' => ' + tz['timezone']);
