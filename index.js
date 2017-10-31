@@ -5,6 +5,8 @@ var app = express();
 
 // Set content type GLOBALLY for any response.
 app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Authorization");
   res.contentType('application/json');
   next();
 });
