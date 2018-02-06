@@ -33,6 +33,8 @@ app.get('/', function (req, res) {
   if( !tz['lat'] || !tz['lng'] ||
       tz['lat'] > 90 || tz['lat'] < -90 ||
       tz['lng'] > 180 || tz['lng'] < -180 ){
+
+    console.log('400 !!!! => lat : '+ tz['lat'] + '/ lng : ' + tz['lng']);
     res.status(400).send('Bad request ');
     return;
   }
