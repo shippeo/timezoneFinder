@@ -20,14 +20,14 @@ app.use(function (req, res, next) {
 app.get('/', function (req, res) {
   var tz = {};
   if(req.query['lat']){
-    tz['lat'] = parseFloat(req.query['lat'].replace(',', '.'))
+    tz['lat'] = parseFloat(req.query['lat'].replace(',', '.')).toFixed(4)
   }
   if(req.query['lng']){
-    tz['lng'] = parseFloat(req.query['lng'].replace(',', '.'))
+    tz['lng'] = parseFloat(req.query['lng'].replace(',', '.')).toFixed(4)
   }
   //TEMP FIX to remove
   if(req.query['lon']){
-    tz['lng'] = parseFloat(req.query['lon'].replace(',', '.'))
+    tz['lng'] = parseFloat(req.query['lon'].replace(',', '.')).toFixed(4)
   }
 
   if( !tz['lat'] || !tz['lng'] ||
