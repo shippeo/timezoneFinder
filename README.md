@@ -10,20 +10,20 @@ npm start
 
 ## Request format
 
-* Only two mandatory parameters : `lat` and `lon`
+* Only two mandatory parameters : `lat` and `lng`
 * Decimal separator : comma or dot
 
 examples :
 
-* `http://(host):8080/?lat=3,2343&lon=22,22`
-* `http://(host):8080/?lat=3.2343&lon=22.22`
+* `http://(host):8080/?lat=3,2343&lng=22,22`
+* `http://(host):8080/?lat=3.2343&lng=22.22`
 
 ## Response format
 
 ```javascript
 {
   "lat": 3.2343,
-  "lon": 22.22,
+  "lng": 22.22,
   "timezone": "Africa/Kinshasa"
 }
 ```
@@ -34,10 +34,10 @@ examples :
 ## coordinates examples
 
 ### France
-[Europe/Paris](https://goo.gl/maps/PLFRdwktTSz)  => http://(host):8080/?lat=50.286&lon=4.165
+[Europe/Paris](https://goo.gl/maps/PLFRdwktTSz)  => http://(host):8080/?lat=50.286&lng=4.165
 
 ### Belgium
-[Europe/Brussels](https://goo.gl/maps/HtnkDeehogD2) => http://(host):8080/?lat=50.286&lon=4.171
+[Europe/Brussels](https://goo.gl/maps/HtnkDeehogD2) => http://(host):8080/?lat=50.286&lng=4.171
 
 ## Dependencies
 
