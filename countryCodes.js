@@ -315,6 +315,7 @@ exports.countryCodes  = {
   'australia/hobart': 'AU',
   'australia/lindeman': 'AU',
   'australia/lord_howe': 'AU',
+  'australia/melbourne': 'AU',
   'australia/melbourne  victoria': 'AU',
   'australia/perth': 'AU',
   'australia/sydney': 'AU',
