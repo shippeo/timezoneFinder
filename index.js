@@ -1,4 +1,4 @@
-var geoTz = require('geo-tz')
+const { find } = require('geo-tz')
 
 var express = require('express');
 var app = express();
@@ -23,8 +23,10 @@ app.get('/', function (req, res) {
     return;
   }
 
-  tz['timezone'] = geoTz.tz(tz['lat'], tz['lon']);
-  res.send(JSON.stringify(tz));
+
+timezoneList = find(tz['lat'], tz['lon']);
+tz['timezone'] = timezoneList[0] ? timezoneList[0] : null;
+res.send(JSON.stringify(tz));
   console.log("Lat: " + tz['lat'] + ' / ' + "Lon: " + tz['lon'] + ' => ' + tz['timezone']);
 });
 
