@@ -1,0 +1,7 @@
+services:
+  shippeo-timezone-finder:
+    build: .
+    container_name: shippeo-timezone-finder-app
+    ports:
+      - "8080:8080"
+    restart: no

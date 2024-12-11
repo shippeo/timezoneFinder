@@ -1,0 +1,19 @@
+name: Composer auth.json
+description: Create an auth.json file with a github auth activated
+inputs:
+  token:
+    description: GITHUB_TOKEN to use
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        cat <<EOF >auth.json 
+        {
+          "github-oauth": {
+            "github.com": "${{ inputs.token}}"
+          }
+        }
+        EOF
+      shell: bash

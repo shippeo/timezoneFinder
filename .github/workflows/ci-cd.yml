@@ -1,0 +1,100 @@
+name: shippeo.timezoneFinder
+run-name: shippeo.timezoneFinder on ${{ github.ref }} branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APP_SHORT_IMAGE_NAME: shippeo-timezone-finder-app
+  CI_REGISTRY_URL: europe-docker.pkg.dev/infra-shippeo-backbone-aa33/backbone-shippeo-cache-docker-registry-europe
+  STABLE_REGISTRY_URL: europe-docker.pkg.dev/infra-shippeo-backbone-aa33/backbone-shippeo-notifications-docker-registry-europe
+
+jobs:
+    configure:
+        runs-on: [self-hosted]
+        container:
+          image: europe-docker.pkg.dev/infra-shippeo-backbone-aa33/backbone-shippeo-dockerhub-proxy-europe/library/ubuntu:20.04
+          credentials:
+              username: _json_key_base64
+              password: "${{ secrets.ARTIFACT_REGISTRY_PASSWORD}}"
+        outputs:
+          image_tag: ${{ steps.COMPUTE_VERSION.outputs.version }}-${{ steps.COMPUTE_FINGERPRINT.outputs.fingerprint }}
+        steps:
+          - name: Install dependencies
+            run: |
+              apt update 
+              apt install -y git
+              git config --global --add safe.directory /__w/shippeo.timezoneFinder/shippeo.timezoneFinder
+          - uses: actions/checkout@v3
+            with:
+              fetch-depth: 0
+          - name: Extract fingerprint
+            id: COMPUTE_FINGERPRINT
+            shell: bash
+            run: echo "fingerprint=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          - uses: paulhatch/semantic-version@master
+            id: COMPUTE_VERSION
+            with:
+              tag_prefix: v
+              major_pattern: "/^[Bb][Rr][Ee][Aa][Kk][Ii][Nn][Gg]/"
+              minor_pattern: "/^[Ff][Ee][Aa][Tt]/"
+              version_format: "${major}.${minor}.${patch}"
+              bump_each_commit: true
+    build-master:
+      needs: configure
+      runs-on: [ self-hosted ]
+      outputs:
+        app_dev_image_name: ${{ steps.EXPORT_IMAGE_NAMES.outputs.app_dev_image_name }}
+      permissions:
+        contents: 'read'
+        id-token: 'write'
+      steps:
+        - uses: actions/checkout@v4
+        - name: Create auth.json
+          uses: ./.github/actions/composer-github-auth
+          with:
+            token: ${{ secrets.TOOLING_GITHUB_ACTION }}
+
+        - name: setup docker context for buildx
+          id: buildx-context
+          run: |
+            docker context create builders
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+          with:
+            endpoint: builders
+        - name: "Artifact authentication"
+          uses: shippeo/tooling-github-action/.github/actions/artifact-authentication@main
+          with:
+            account: github-notifications-4509@infra-shippeo-backbone-aa33.iam.gserviceaccount.com
+        - name: Build and push
+          uses: docker/build-push-action@v6
+          with:
+            file: ./Dockerfile
+            context: .
+            push: true
+            tags: "${{ env.CI_REGISTRY_URL }}/${{ env.APP_SHORT_IMAGE_NAME }}-ci:${{ needs.configure.outputs.image_tag }}"
+            target: shippeo.timezoneFinder_production
+            build-args: |
+              BUILD_MODE=production
+              UID=1000
+              GID=1000
+            secret-files: |
+              composer_auth=./auth.json
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
+        - name: Export image names
+          id: EXPORT_IMAGE_NAMES
+          run: |
+            echo "::set-output name=app_dev_image_name::${{ env.CI_REGISTRY_URL }}/${{ env.APP_SHORT_IMAGE_NAME }}-ci:${{ needs.configure.outputs.image_tag }}"
