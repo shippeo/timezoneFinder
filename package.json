@@ -1,19 +1,26 @@
 {
   "name": "timezone-finder",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Find timezone of a gps coordinate based on geo-tz node module",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node index.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   },
   "author": "David Barré <david@shippeo.com>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.1",
-    "geo-tz": "^3.2.0"
-  },  
-  "engines" : {
-    "node" : "^5.4.1"
+    "express": "^4.21.1",
+    "geo-tz": "^8.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
