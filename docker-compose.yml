@@ -1,0 +1,11 @@
+---
+version: "3.8"
+
+services:
+  timezonefinder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: timezonefinder
+    ports:
+      - "8080:8080"
