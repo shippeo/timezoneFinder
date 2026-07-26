@@ -1,0 +1,52 @@
+---
+name: PR
+
+"on":
+  pull_request:
+    branches:
+      - main
+      - master
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number }}"
+  cancel-in-progress: true
+
+jobs:
+  lint-test-typecheck:
+    name: Lint, Test and Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup package manager
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Turborepo tasks
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: "${{ runner.os }}-turbo-${{ github.sha }}"
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Run lint
+        run: pnpm turbo run lint --cache-dir=.turbo
+
+      - name: Run tests
+        run: pnpm turbo run test --cache-dir=.turbo
+
+      - name: Run typecheck
+        run: pnpm turbo run typecheck --cache-dir=.turbo
